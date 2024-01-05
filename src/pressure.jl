@@ -68,6 +68,11 @@ function cross!(C::VectorData{N},A::ScalarData{N},B::VectorData{N}) where {N}
     return C
 end
 
+function cross!(C::ScalarData{N},A::VectorData{N},B::VectorData{N}) where {N}
+    @. C = A.u*B.v-A.v*B.u
+    return C
+end
+
 function cross!(C::VectorData{N},A::VectorData{N},B::ScalarData{N}) where {N}
     @. C.u = A.v*B
     @. C.v = -A.u*B

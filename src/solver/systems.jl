@@ -21,7 +21,7 @@ struct IBPoisson{TU,TF} <: AbstractPotentialFlowSystem{TU}
     """E: Interpolation operator."""
     E::InterpolationMatrix{TU,TF}
     """Sfact: factorized version of the Schur complement."""
-    Sfact::LU # Factorization
+    Sfact # Factorization
 
     """Buffers"""
     _A⁻¹r₁::TU

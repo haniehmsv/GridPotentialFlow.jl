@@ -197,7 +197,7 @@ function setU∞(vm::VortexModel, U∞)
     vm.U∞ = U∞
 end
 
-function _updatesystemd_vec!(vm::VortexModel{Nb,Ne,UnsteadyRegularizedIBPoisson{Nb,Ne,TU,TF}}, idx::Vector{Int}) where {Nb,Ne,TU,TF}
+function _updatesystemd_vec!(vm::VortexModel{Nb,Ne,UnsteadyRegularizedIBPoisson{Nb,Ne,TU,TF}}, idx::Vector{Int64}) where {Nb,Ne,TU,TF}
 
     v = view(vm.vortices,idx)
 

@@ -1,3 +1,5 @@
+export PoissonSolution, IBPoissonSolution, ConstrainedIBPoissonSolution
+
 abstract type AbstractIBPoissonSolution{TU,TF} end # subtypes require ψ and f field. Change this eventually to getψ and getf methods. Similarly for RHS types.
 
 struct PoissonSolution{TU}

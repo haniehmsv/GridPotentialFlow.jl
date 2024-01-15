@@ -262,17 +262,13 @@ function vortexvelocities!(vm::VortexModel{Nb,Ne}) where {Nb,Ne}
     return vortexvelocities!(Ẋ_vortices, vm, sol.ψ)
 end
 
-function vortexvelocities!(vm::VortexModel{Nb,Ne},sol::Union{PoissonSolution,ConstrainedIBPoissonSolution}) where {Nb,Ne}
+function vortexvelocities!(vm::VortexModel{Nb,0},sol::ConstrainedIBPoissonSolution) where {Nb}
+
+    subtractcirculation!(vm.bodies, vm.vortices.Γ[end-1:end])
+
+    solve!(sol, vm)
 
     Ẋ_vortices = VectorData(length(vm.vortices))
-
-    for k in 1:Ne
-        vm.vortices.Γ[end-Ne+k] = sol.δΓ_vec[k]
-    end
-
-    if  Ne > 0
-        subtractcirculation!(vm.bodies, sol.δΓ_vec)
-    end
 
     return vortexvelocities!(Ẋ_vortices, vm, sol.ψ)
 end

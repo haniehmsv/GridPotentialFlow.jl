@@ -11,11 +11,11 @@ $(TYPEDFIELDS)
 """
 mutable struct Vortex
     """x: x-coordinate of the vortex position."""
-    x::Float64
+    x::Real
     """y: y-coordinate of the vortex position."""
-    y::Float64
+    y::Real
     """Γ: Strength of the vortex. Positive if counter-clockwise."""
-    Γ::Float64
+    Γ::Real
 end
 
 """

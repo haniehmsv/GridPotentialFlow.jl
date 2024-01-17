@@ -36,7 +36,7 @@ mutable struct VortexModel{Nb,Ne,TS<:Union{AbstractPotentialFlowSystem,Laplacian
     """vortices: Point vortices in the vortex model."""
     vortices::StructVector{Vortex}
     """U∞: Uniform flow in the vortex model."""
-    U∞::Tuple{Real,Real}
+    U∞::Tuple{Float64,Float64}
     """system: Potential flow system that has to be solved with an `AbstractPotentialFlowRHS` and an `AbstractPotentialFlowSolution` to compute the potential flow that governs the vortex model.
     """
     system::TS

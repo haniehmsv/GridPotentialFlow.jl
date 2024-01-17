@@ -18,11 +18,6 @@ mutable struct Vortex
     Γ
 end
 
-
-function Vortex(x::T,y::T,Γ::T) where {T<:Real}
-    return Vortex(x,y,Γ)
-end
-
 """
 $(TYPEDSIGNATURES)
 

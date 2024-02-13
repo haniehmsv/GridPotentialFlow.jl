@@ -12,11 +12,11 @@ mutable struct PotentialFlowBody
     """body: """
     points::Body
     """U: Linear velocity of the body."""
-    U::Tuple{Float64,Float64}
+    U::Tuple{Real,Real}
     """Ω: Rotational velocity of the body."""
-    Ω::Float64
+    Ω::Real
     """Γ: Current circulation about the body."""
-    Γ::Float64
+    Γ::Real
     """regidx: Array of the indices of any regularized edges."""
     edges::Vector{Int}
     """σ: Array of suction parameters or suction parameter ranges associated with the entries of `edges`."""

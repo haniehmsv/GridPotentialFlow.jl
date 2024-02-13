@@ -5,6 +5,8 @@ using StructArrays
 using DocStringExtensions
 using RecipesBase
 using UnPack
+using ForwardDiff
+const FD = ForwardDiff
 
 @reexport using CartesianGrids
 @reexport using RigidBodyTools

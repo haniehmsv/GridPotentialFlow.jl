@@ -36,7 +36,7 @@ mutable struct VortexModel{Nb,Ne,TS<:Union{AbstractPotentialFlowSystem,Laplacian
     """vortices: Point vortices in the vortex model."""
     vortices::StructVector{Vortex}
     """U∞: Uniform flow in the vortex model."""
-    U∞::Tuple{Float64,Float64}
+    U∞::Tuple{Real,Real}
     """system: Potential flow system that has to be solved with an `AbstractPotentialFlowRHS` and an `AbstractPotentialFlowSolution` to compute the potential flow that governs the vortex model.
     """
     system::TS
@@ -58,7 +58,7 @@ $(TYPEDSIGNATURES)
 
 Constructs a vortex model using the given function.
 """
-function VortexModel(g::PhysicalGrid, bodies::Vector{PotentialFlowBody}, vortices::StructVector{Vortex}, U∞::Tuple{Float64,Float64})
+function VortexModel(g::PhysicalGrid, bodies::Vector{PotentialFlowBody}, vortices::StructVector{Vortex}, U∞::Tuple{Real,Real})
 
     vortices = deepcopy(vortices)
 
@@ -74,13 +74,13 @@ function VortexModel(g::PhysicalGrid, bodies::Vector{PotentialFlowBody}, vortice
     end
 
     # Initialize data structures for internal use
-    _nodedata = Nodes(Dual,size(g))
-    _edgedata = Edges(Primal,size(g))
-    _bodyvectordata = VectorData(sizef)
-    _ψ = Nodes(Dual,size(g))
-    _f = ScalarData(sizef)
-    _w = Nodes(Dual,size(g))
-    _ψb = ScalarData(sizef)
+    _nodedata = Nodes(Dual,size(g),dtype=Real)
+    _edgedata = Edges(Primal,size(g),dtype=Real)
+    _bodyvectordata = VectorData(sizef,dtype=Real)
+    _ψ = Nodes(Dual,size(g),dtype=Real)
+    _f = ScalarData(sizef,dtype=Real)
+    _w = Nodes(Dual,size(g),dtype=Real)
+    _ψb = ScalarData(sizef,dtype=Real)
 
     L = plan_laplacian(size(_nodedata),with_inverse=true)
     if Nb == 0
@@ -128,7 +128,7 @@ function VortexModel(g::PhysicalGrid, bodies::Vector{PotentialFlowBody}, vortice
     VortexModel{Nb,Ne,typeof(system),typeof(_ψ),typeof(_edgedata),typeof(_f),typeof(_bodyvectordata),typeof(ilsys)}(g, bodies, vortices, U∞, system, ilsys, _nodedata, _edgedata, _bodyvectordata, _ψ, _f, _w, _ψb)
 end
 
-function VortexModel(g::PhysicalGrid; bodies::Vector{PotentialFlowBody}=Vector{PotentialFlowBody}(), vortices::Vector{Vortex}=Vector{Vortex}(), U∞::Tuple{Float64,Float64}=(0.0,0.0))
+function VortexModel(g::PhysicalGrid; bodies::Vector{PotentialFlowBody}=Vector{PotentialFlowBody}(), vortices::Vector{Vortex}=Vector{Vortex}(), U∞::Tuple{Real,Real}=(0.0,0.0))
     return VortexModel(g, bodies, StructVector(vortices), U∞)
 end
 

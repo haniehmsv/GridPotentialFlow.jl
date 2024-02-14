@@ -75,7 +75,7 @@ function ConstrainedIBPoisson(L::CartesianGrids.Laplacian, R::RegularizationMatr
     S₀ = Matrix{Float64}(undef, Nb, Nb)
     _S⁻¹B₁ᵀ₂ = zeros(length(_f_buf), Nb)
     Soutfact = _computeSoutfact(S₀, ibp.Sfact, B₁ᵀ₂cols, B₂₂rows, _S⁻¹B₁ᵀ₂)
-    _ψ₀_buf = zeros(Nb)
+    _ψ₀_buf = zeros(Real,Nb)
     _sol_buf = IBPoissonSolution{TU,TF}(TU(),TF())
     ConstrainedIBPoisson{Nb,TU,TF}(ibp, B₁ᵀ₂cols, B₂₂rows, Soutfact, _f_buf, _ψ₀_buf, _sol_buf)
 end
@@ -149,7 +149,7 @@ struct UnsteadyRegularizedIBPoisson{Nb,Ne,TU,TF} <: AbstractPotentialFlowSystem{
     """f̃_vec: Array of unregularized bound vortex sheet strengths, obtained using the re-scaled regularization operator, with the i-th entry the bound vortex sheet strength due to the i-th vorticity field in `d_vec` and a zero boundary condition for the streamfunction on all bodies."""
     f̃_vec::Vector{TF}
     """Γ₀: The circulation of the of the bound vortex sheet strength f₀."""
-    Γ₀::Float64
+    Γ₀::Real
     """d_vec: Array of vorticity fields with the i-th entry the vorticity field due to the i-th point vortex that is used for regularizing the edges with its strength set to one and the other point vortex strengths set to zero."""
     d_vec::Vector{TU}
     """activef̃lim_vec: Array of f̃ values that are used as the right-hand side for the constraints on f̃ when solving the system. These values are chosen by comparing the unconstrained f̃ from the inner system to the limits provided in `rhs` to `ldiv!` and selecting the limit that is exceeded or setting it to `Inf` if no limit is exceeded."""
@@ -160,8 +160,8 @@ struct UnsteadyRegularizedIBPoisson{Nb,Ne,TU,TF} <: AbstractPotentialFlowSystem{
     """Buffers"""
     _TU_buf::TU
     _f_buf::TF
-    _r₂_buf::Vector{Float64}
-    _y_buf::Vector{Float64}
+    _r₂_buf::Vector{Real}
+    _y_buf::Vector{Real}
 end
 
 function UnsteadyRegularizedIBPoisson(L::CartesianGrids.Laplacian, R::RegularizationMatrix{TU,TF}, E::InterpolationMatrix{TU,TF}, one_vec::Vector{TF}, e_vec::Vector{TF}, vidx_vec::Vector{Vector{Int}}) where {TU,TF}

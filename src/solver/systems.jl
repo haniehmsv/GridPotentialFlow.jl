@@ -312,65 +312,12 @@ function _computeSoutfact(S₀,Sfact,B₁ᵀ₂cols,B₂₁rows,_S⁻¹B₁ᵀ�
     Soutfact = factorize(S₀)
 end
 
-# function ldiv!(x::ScalarData ,A::LU, f::ScalarData)
-#     ldiv!(x.data,A,f.data)
-# end
-
 function ldiv!(x::ScalarData ,A::LU, f::ScalarData)
-    # vector including values of FD.Dual numbers
-    valvec = FD.value.(f.data)
-    outval = deepcopy(valvec)
-    ldiv!(outval,A,valvec)
-    x.data .= outval
-
-    parvec = FD.partials.(f.data)
-    if !(all(isempty, parvec))
-      idx = findfirst(x -> x != 0, f.data)
-      tag = get_tag(f.data[idx])
-      # vector including partials of FD.Dual numbers
-      parval = similar(valvec)
-      npar = length(parvec[idx])
-      outpar = []
-
-      for k in 1:npar
-        fill!(parval, 0)
-        parval .= FD.partials.(f.data,k)
-        _outpar = similar(parval)
-        ldiv!(_outpar,A,parval)
-        push!(outpar,_outpar)
-      end
-
-      x.data .= [FD.Dual{tag}(outval[i], [outpar[k][i] for k in 1:npar]...) for i in 1:length(x.data)]
-    end
+    ldiv!(x.data,A,f.data)
 end
 
-# function ldiv!(A::LU, f::ScalarData)
-#     ldiv!(A,f.data)
-# end
-
 function ldiv!(A::LU, f::ScalarData)
-    # vector including values of FD.Dual numbers
-    valvec = FD.value.(f.data)
-    ldiv!(A,valvec)
-
-    parvec = FD.partials.(f.data)
-    if !(all(isempty, parvec))
-      idx = findfirst(x -> x != 0, f.data)
-      tag = get_tag(f.data[idx])
-      # vector including partials of FD.Dual numbers
-      parval = similar(valvec)
-      npar = length(parvec[idx])
-      outpar = []
-
-      for k in 1:npar
-        fill!(parval, 0)
-        parval .= FD.partials.(f.data,k)
-        ldiv!(A,parval)
-        push!(outpar,parval)
-      end
-
-      f.data .= [FD.Dual{tag}(valvec[i], [outpar[k][i] for k in 1:npar]...) for i in 1:length(f.data)]
-    end
+    ldiv!(A,f.data)
 end
 
 

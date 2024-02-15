@@ -28,13 +28,13 @@ $(TYPEDFIELDS)
 # Examples
 (under construction)
 """
-mutable struct VortexModel{Nb,Ne,T,TS<:Union{AbstractPotentialFlowSystem,Laplacian},TU<:Nodes,TE<:Edges,TF<:ScalarData,TX<:VectorData,ILS<:Union{ILMSystem,Nothing}}
+mutable struct VortexModel{Nb,Ne,TS<:Union{AbstractPotentialFlowSystem,Laplacian},TU<:Nodes,TE<:Edges,TF<:ScalarData,TX<:VectorData,ILS<:Union{ILMSystem,Nothing}}
     """g: The grid on which the vortex model is defined."""
     g::PhysicalGrid
     """bodies: Bodies in the vortex model."""
     bodies::Vector{PotentialFlowBody}
     """vortices: Point vortices in the vortex model."""
-    vortices::StructVector{Vortex{T}}
+    vortices::StructVector{<:Vortex}
     """U∞: Uniform flow in the vortex model."""
     U∞::Tuple{Real,Real}
     """system: Potential flow system that has to be solved with an `AbstractPotentialFlowRHS` and an `AbstractPotentialFlowSolution` to compute the potential flow that governs the vortex model.
@@ -58,7 +58,7 @@ $(TYPEDSIGNATURES)
 
 Constructs a vortex model using the given function.
 """
-function VortexModel(g::PhysicalGrid, bodies::Vector{PotentialFlowBody}, vortices::StructVector{Vortex{T}}, U∞::Tuple{Real,Real}) where {T}
+function VortexModel(g::PhysicalGrid, bodies::Vector{PotentialFlowBody}, vortices::StructVector{<:Vortex}, U∞::Tuple{Real,Real})
 
     vortices = deepcopy(vortices)
 
@@ -125,10 +125,10 @@ function VortexModel(g::PhysicalGrid, bodies::Vector{PotentialFlowBody}, vortice
     end
 
 
-    VortexModel{Nb,Ne,T,typeof(system),typeof(_ψ),typeof(_edgedata),typeof(_f),typeof(_bodyvectordata),typeof(ilsys)}(g, bodies, vortices, U∞, system, ilsys, _nodedata, _edgedata, _bodyvectordata, _ψ, _f, _w, _ψb)
+    VortexModel{Nb,Ne,typeof(system),typeof(_ψ),typeof(_edgedata),typeof(_f),typeof(_bodyvectordata),typeof(ilsys)}(g, bodies, vortices, U∞, system, ilsys, _nodedata, _edgedata, _bodyvectordata, _ψ, _f, _w, _ψb)
 end
 
-function VortexModel(g::PhysicalGrid; bodies::Vector{PotentialFlowBody}=Vector{PotentialFlowBody}(), vortices::Vector{Vortex{T}}=Vector{Vortex{T}}(), U∞::Tuple{Real,Real}=(0.0,0.0)) where T
+function VortexModel(g::PhysicalGrid; bodies::Vector{PotentialFlowBody}=Vector{PotentialFlowBody}(), vortices::Vector{<:Vortex}=Vector{<:Vortex}(), U∞::Tuple{Real,Real}=(0.0,0.0))
     return VortexModel(g, bodies, StructVector(vortices), U∞)
 end
 

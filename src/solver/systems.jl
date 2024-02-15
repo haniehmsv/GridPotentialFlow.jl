@@ -268,7 +268,7 @@ function ldiv!(sol::ConstrainedIBPoissonSolution{TU,TF}, sys::UnsteadyRegularize
         # eq 2.47
         ldiv!(IBPoissonSolution(sys._TU_buf, sys.f̃_vec[k]), sys.ibp, IBPoissonRHS(sys.d_vec[k],sys._f_buf), zeroψb=true, onlyf=true)
         # eq 2.60
-        sys.activef̃lim_vec[k] = _findactivef̃limit(sys.e_vec[k], sol.f, rhs.f̃lim_vec[k])
+        sys.activef̃lim_vec[k] = _findactivef̃limit(sys.e_vec[k], FD.value.(sol.f), rhs.f̃lim_vec[k])
     end
 
     # The shedding edges are the ones for which the active f̃ limit is not Inf

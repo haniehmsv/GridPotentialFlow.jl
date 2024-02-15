@@ -128,7 +128,7 @@ function VortexModel(g::PhysicalGrid, bodies::Vector{PotentialFlowBody}, vortice
     VortexModel{Nb,Ne,T,typeof(system),typeof(_ψ),typeof(_edgedata),typeof(_f),typeof(_bodyvectordata),typeof(ilsys)}(g, bodies, vortices, U∞, system, ilsys, _nodedata, _edgedata, _bodyvectordata, _ψ, _f, _w, _ψb)
 end
 
-function VortexModel(g::PhysicalGrid; bodies::Vector{PotentialFlowBody}=Vector{PotentialFlowBody}(), vortices::Vector{Vortex}=Vector{Vortex}(), U∞::Tuple{Real,Real}=(0.0,0.0))
+function VortexModel(g::PhysicalGrid; bodies::Vector{PotentialFlowBody}=Vector{PotentialFlowBody}(), vortices::Vector{Vortex{T}}=Vector{Vortex{T}}(), U∞::Tuple{Real,Real}=(0.0,0.0)) where T
     return VortexModel(g, bodies, StructVector(vortices), U∞)
 end
 

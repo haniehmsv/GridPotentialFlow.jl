@@ -178,7 +178,7 @@ function UnsteadyRegularizedIBPoisson(L::CartesianGrids.Laplacian, R::Regulariza
     _f_buf .= 1.0
     ldiv!(IBPoissonSolution(_TU_buf,f₀),ibp,IBPoissonRHS(_TU_buf,_f_buf), onlyf=true, zerow=true)
 
-    f₀_vec = [f₀.*one_vec[i] for i=1:Nb]
+    f₀_vec = [f₀*one_vec[i] for i=1:Nb]
 
     R̃ = deepcopy(R)
     R̃.M .= R̃.M*Diagonal(f₀)

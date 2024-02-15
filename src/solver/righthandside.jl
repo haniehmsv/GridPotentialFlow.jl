@@ -15,11 +15,11 @@ struct ConstrainedIBPoissonRHS{T,TU,TF} <: AbstractIBPoissonRHS{TU,TF}
     fconstraintRHS::Vector{T}
 end
 
-struct UnsteadyRegularizedIBPoissonRHS{TU,TF} <: AbstractIBPoissonRHS{TU,TF}
+struct UnsteadyRegularizedIBPoissonRHS{TU,TF,T} <: AbstractIBPoissonRHS{TU,TF}
     w::TU
     ψb::TF
     f̃lim_vec::Vector{f̃Limits}
-    Γw_vec::Vector{Float64}
+    Γw_vec::Vector{T}
 end
 
 function _scaletoindexspace!(rhs::PoissonRHS, Δx::Real)

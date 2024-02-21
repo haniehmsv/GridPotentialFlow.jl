@@ -380,7 +380,7 @@ function solve!(sol::ConstrainedIBPoissonSolution, vm::VortexModel{Nb,Ne,Unstead
     end
     Γw = -deepcopy(getΓ.(vm.bodies)) # deepcopy because _scaletoindexspace mutates
     if (mod(length(vm.vortices),2)==0) && (Ne==1)  #if Γ̇_LE is given
-        Γw .-= vm.vortices[length(vm.vortices)-Ne].Γ
+        Γw .-= vm.vortices.Γ[end-Ne]
     end
     rhs = UnsteadyRegularizedIBPoissonRHS(vm._w, vm._ψb, f̃lim_vec, Γw)
     _scaletoindexspace!(rhs, cellsize(vm.g))

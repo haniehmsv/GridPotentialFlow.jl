@@ -159,6 +159,16 @@ function subtractcirculation!(b::AbstractVector{PotentialFlowBody}, δΓ_vec::Ab
     end
 end
 
+function subtractcirculation!(b::AbstractVector{PotentialFlowBody}, δΓ2::Float64)
+    i = 0
+    for j in 1:length(b)
+        for k in 1:length(b[j].edges)
+            i += 1
+            b[j].Γ -= δΓ2
+        end
+    end
+end
+
 function bodypointsvelocity!(v::AbstractVector, b::AbstractVector{PotentialFlowBody}, dir::Int)
     for i in 1:length(b)
         vi = view(v,getrange(b,i))

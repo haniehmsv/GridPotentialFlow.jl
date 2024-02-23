@@ -262,21 +262,6 @@ function vortexvelocities!(vm::VortexModel{Nb,Ne}) where {Nb,Ne}
     return vortexvelocities!(Ẋ_vortices, vm, sol.ψ)
 end
 
-function vortexvelocities!(vm::VortexModel{Nb,0}) where {Nb}
-
-    if Nb == 0
-        sol = PoissonSolution(vm._ψ)
-        solve!(sol, vm)
-    else
-        sol = ConstrainedIBPoissonSolution(vm._ψ, vm._f, zeros(Float64,Nb), zeros(Float64,0))
-        solve!(sol, vm)
-    end
-
-    Ẋ_vortices = VectorData(length(vm.vortices))
-
-    return vortexvelocities!(Ẋ_vortices, vm, sol.ψ)
-end
-
 """
 $(SIGNATURES)
 

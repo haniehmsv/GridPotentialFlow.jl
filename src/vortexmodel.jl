@@ -28,7 +28,7 @@ $(TYPEDFIELDS)
 # Examples
 (under construction)
 """
-mutable struct VortexModel{Nb,Ne,TS<:Union{AbstractPotentialFlowSystem,Laplacian},TU<:Nodes,TE<:Edges,TF<:ScalarData,TX<:VectorData,ILS<:Union{ILMSystem,Nothing}}
+mutable struct VortexModel{Nb,Ne,TV,TS<:Union{AbstractPotentialFlowSystem,Laplacian},TU<:Nodes,TE<:Edges,TF<:ScalarData,TX<:VectorData,ILS<:Union{ILMSystem,Nothing}}
     """g: The grid on which the vortex model is defined."""
     g::PhysicalGrid
     """bodies: Bodies in the vortex model."""
@@ -36,7 +36,7 @@ mutable struct VortexModel{Nb,Ne,TS<:Union{AbstractPotentialFlowSystem,Laplacian
     """vortices: Point vortices in the vortex model."""
     vortices::StructVector{<:Vortex}
     """U∞: Uniform flow in the vortex model."""
-    U∞::Tuple{Real,Real}
+    U∞::Tuple{TV,TV}
     """system: Potential flow system that has to be solved with an `AbstractPotentialFlowRHS` and an `AbstractPotentialFlowSolution` to compute the potential flow that governs the vortex model.
     """
     system::TS
@@ -58,7 +58,7 @@ $(TYPEDSIGNATURES)
 
 Constructs a vortex model using the given function.
 """
-function VortexModel(g::PhysicalGrid, bodies::Vector{PotentialFlowBody}, vortices::StructVector{<:Vortex}, U∞::Tuple{Real,Real})
+function VortexModel(g::PhysicalGrid, bodies::Vector{PotentialFlowBody}, vortices::StructVector{<:Vortex}, U∞::Tuple{TV,TV}) where {TV<:Real}
 
     vortices = deepcopy(vortices)
 
@@ -94,7 +94,7 @@ function VortexModel(g::PhysicalGrid, bodies::Vector{PotentialFlowBody}, vortice
         Rmat,_ = RegularizationMatrix(regop, _f, _nodedata)
         Emat = InterpolationMatrix(regop, _nodedata, _f)
 
-        one_vec = [ScalarData(sizef,dtype=Real) for i in 1:Nb]
+        one_vec = [ScalarData(sizef) for i in 1:Nb]
         for i in 1:Nb
             one_vec[i][getrange(bodies,i)] .= 1.0
         end
@@ -102,7 +102,7 @@ function VortexModel(g::PhysicalGrid, bodies::Vector{PotentialFlowBody}, vortice
         if Ne == 0 # System without regularized edges. Enforce circulation constraints.
             system = ConstrainedIBPoisson(L, Rmat, Emat, one_vec, one_vec)
         else # System with regularized edges. Enforce edge constraints.
-            e_vec = [ScalarData(sizef,dtype=Real) for i in 1:Ne]
+            e_vec = [ScalarData(sizef) for i in 1:Ne]
             k = 0
             for i in 1:Nb
                 for id in getregularizededges(bodies,i)
@@ -125,10 +125,10 @@ function VortexModel(g::PhysicalGrid, bodies::Vector{PotentialFlowBody}, vortice
     end
 
 
-    VortexModel{Nb,Ne,typeof(system),typeof(_ψ),typeof(_edgedata),typeof(_f),typeof(_bodyvectordata),typeof(ilsys)}(g, bodies, vortices, U∞, system, ilsys, _nodedata, _edgedata, _bodyvectordata, _ψ, _f, _w, _ψb)
+    VortexModel{Nb,Ne,TV,typeof(system),typeof(_ψ),typeof(_edgedata),typeof(_f),typeof(_bodyvectordata),typeof(ilsys)}(g, bodies, vortices, U∞, system, ilsys, _nodedata, _edgedata, _bodyvectordata, _ψ, _f, _w, _ψb)
 end
 
-function VortexModel(g::PhysicalGrid; bodies::Vector{PotentialFlowBody}=Vector{PotentialFlowBody}(), vortices::Vector{<:Vortex}=Vector{<:Vortex}(), U∞::Tuple{Real,Real}=(0.0,0.0))
+function VortexModel(g::PhysicalGrid; bodies::Vector{PotentialFlowBody}=Vector{PotentialFlowBody}(), vortices::Vector{<:Vortex}=Vector{<:Vortex}(), U∞::Tuple{TV,TV}=(0.0,0.0)) where {TV<:Real}
     return VortexModel(g, bodies, StructVector(vortices), U∞)
 end
 

@@ -193,8 +193,8 @@ function UnsteadyRegularizedIBPoisson(L::CartesianGrids.Laplacian, R::Regulariza
     Γ₀ = sum(f₀)
     activef̃lim_vec = zeros(Ne)
     Sout = zeros(Nb+Ne,Nb+Ne)
-    _r₂_buf = zeros(Nb+Ne)
-    _y_buf = zeros(Nb+Ne)
+    _r₂_buf = zeros(Real,Nb+Ne)
+    _y_buf = zeros(Real,Nb+Ne)
 
     UnsteadyRegularizedIBPoisson{Nb,Ne,TU,TF}(ibp, one_vec, e_vec, vidx_vec, f₀, f₀_vec, f̃₀_vec, f̃_vec, Γ₀, d_vec, activef̃lim_vec, Sout, _TU_buf, _f_buf, _r₂_buf, _y_buf)
 end

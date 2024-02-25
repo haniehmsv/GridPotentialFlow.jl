@@ -76,7 +76,7 @@ function VortexModel(g::PhysicalGrid, bodies::Vector{PotentialFlowBody}, vortice
     # Initialize data structures for internal use
     _nodedata = Nodes(Dual,size(g),dtype=Real)
     _edgedata = Edges(Primal,size(g),dtype=Real)
-    _bodyvectordata = VectorData(sizef,dtype=Real)
+    _bodyvectordata = VectorData(sizef,dtype=TV)
     _ψ = Nodes(Dual,size(g),dtype=Real)
     _f = ScalarData(sizef,dtype=Real)
     _w = Nodes(Dual,size(g),dtype=Real)
@@ -94,7 +94,7 @@ function VortexModel(g::PhysicalGrid, bodies::Vector{PotentialFlowBody}, vortice
         Rmat,_ = RegularizationMatrix(regop, _f, _nodedata)
         Emat = InterpolationMatrix(regop, _nodedata, _f)
 
-        one_vec = [ScalarData(sizef) for i in 1:Nb]
+        one_vec = [ScalarData(sizef,dtype=Real) for i in 1:Nb]
         for i in 1:Nb
             one_vec[i][getrange(bodies,i)] .= 1.0
         end
@@ -102,7 +102,7 @@ function VortexModel(g::PhysicalGrid, bodies::Vector{PotentialFlowBody}, vortice
         if Ne == 0 # System without regularized edges. Enforce circulation constraints.
             system = ConstrainedIBPoisson(L, Rmat, Emat, one_vec, one_vec)
         else # System with regularized edges. Enforce edge constraints.
-            e_vec = [ScalarData(sizef) for i in 1:Ne]
+            e_vec = [ScalarData(sizef,dtype=Real) for i in 1:Ne]
             k = 0
             for i in 1:Nb
                 for id in getregularizededges(bodies,i)

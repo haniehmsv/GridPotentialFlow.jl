@@ -73,7 +73,7 @@ function ConstrainedIBPoisson(L::CartesianGrids.Laplacian, R::RegularizationMatr
     Nb = length(B₁ᵀ₂cols) # number of bodies
     ibp = IBPoisson(L,R,E)
     S₀ = Matrix{Float64}(undef, Nb, Nb)
-    _S⁻¹B₁ᵀ₂ = zeros(length(_f_buf), Nb)
+    _S⁻¹B₁ᵀ₂ = zeros(Real,length(_f_buf), Nb)
     Soutfact = _computeSoutfact(S₀, ibp.Sfact, B₁ᵀ₂cols, B₂₂rows, _S⁻¹B₁ᵀ₂)
     _ψ₀_buf = zeros(Real,Nb)
     _sol_buf = IBPoissonSolution{TU,TF}(TU(),TF())

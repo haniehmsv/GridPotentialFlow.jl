@@ -2,9 +2,9 @@ import Base: *, /
 
 export SuctionParameter, SuctionParameterRange, ModelParameters
 
-const SuctionParameter = Float64
+const SuctionParameter = Real
 
-const f̃Limit = Float64
+const f̃Limit = Real
 
 struct SuctionParameterRange
     σmin::SuctionParameter

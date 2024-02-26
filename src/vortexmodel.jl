@@ -395,7 +395,7 @@ end
 
 function solve(vm::VortexModel{Nb,Ne,TS,TU,TE,TF}) where {Nb,Ne,TS<:AbstractPotentialFlowSystem,TU,TE,TF}
 
-    sol = ConstrainedIBPoissonSolution(TU(), TF(), zeros(Float64,Nb), zeros(Float64,Ne))
+    sol = ConstrainedIBPoissonSolution(TU(), TF(), zeros(Real,Nb), zeros(Real,Ne))
     solve!(sol, vm)
 
     return sol

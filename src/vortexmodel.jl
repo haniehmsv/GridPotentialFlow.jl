@@ -245,7 +245,7 @@ function vortexvelocities!(vm::VortexModel{Nb,Ne}) where {Nb,Ne}
         sol = PoissonSolution(vm._ψ)
         solve!(sol, vm)
     else
-        sol = ConstrainedIBPoissonSolution(vm._ψ, vm._f, zeros(Float64,Nb), zeros(Float64,Ne))
+        sol = ConstrainedIBPoissonSolution(vm._ψ, vm._f, zeros(Real,Nb), zeros(Real,Ne))
         solve!(sol, vm)
     end
 

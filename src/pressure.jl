@@ -16,7 +16,7 @@ function pressurejump!(dp::ScalarData{N},γn::ScalarData{N},γnp1::ScalarData{N}
 
 end
 
-function pressurejump2!(dp::ScalarData{N},fn::ScalarData{N},vmn::VortexModel,vm1::VortexModel,fnp1::ScalarData{N},v̄s::VectorData{N},Δt::Real,Δs::Real, sys::ImmersedLayers.ILMSystem{<:GridPotentialILMProblem}) where {N}
+function pressurejump2!(dp::ScalarData{N},fn::ScalarData{N},vm1::VortexModel,fnp1::ScalarData{N},v̄s::VectorData{N},Δt::Real,Δs::Real, sys::ImmersedLayers.ILMSystem{<:GridPotentialILMProblem}) where {N}
     @unpack base_cache, extra_cache = sys
     @unpack g, nrm, gcurl_cache, sdata_cache = base_cache
     @unpack CLinvCT, Rn = extra_cache

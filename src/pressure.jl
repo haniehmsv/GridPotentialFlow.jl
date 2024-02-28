@@ -27,6 +27,7 @@ function pressurejump2!(dp::ScalarData{N},fn::ScalarData{N},vm1::VortexModel,fnp
     end
     dp .*= -cellsize(g)/Δt
     cross!(sdata_cache,nrm,v̄s)
+    γn = fn./Δs
     dp .-= sdata_cache∘γn
 end
 

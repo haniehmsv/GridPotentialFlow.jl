@@ -16,13 +16,15 @@ function pressurejump!(dp::ScalarData{N},γn::ScalarData{N},γnp1::ScalarData{N}
 
 end
 
+"""An alternative way to calculate pressure jump across the plate using the idea of Δϕₖ=-Γₖ"""
+
 function pressurejump!(dp::ScalarData{N},fn::ScalarData{N},vm1::VortexModel,fnp1::ScalarData{N},v̄s::VectorData{N},Δt::Real,Δs, sys::ImmersedLayers.ILMSystem{<:GridPotentialILMProblem}) where {N}
     @unpack base_cache, extra_cache = sys
     @unpack g, nrm, gcurl_cache, sdata_cache = base_cache
     @unpack CLinvCT, Rn = extra_cache
 
     for i in 1:length(dp)
-        dp[i] = sum(view(fnp1,1:i))*Δs[i] + sum(vm1.vortices.Γ[end-1:end])
+        dp[i] = sum(view(fnp1,1:i))*Δs[i] + vm1.vortices.Γ[end-1]
         dp[i] -= sum(view(fn,1:i))*Δs[i]
     end
     dp .*= -cellsize(g)/Δt

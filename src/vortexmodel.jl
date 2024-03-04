@@ -28,7 +28,7 @@ $(TYPEDFIELDS)
 # Examples
 (under construction)
 """
-mutable struct VortexModel{Nb,Ne,TV,TS<:Union{AbstractPotentialFlowSystem,Laplacian},TU<:Nodes,TE<:Edges,TF<:ScalarData,TX<:VectorData,ILS<:Union{ILMSystem,Nothing}}
+mutable struct VortexModel{Nb,Ne,TS<:Union{AbstractPotentialFlowSystem,Laplacian},TU<:Nodes,TE<:Edges,TF<:ScalarData,TX<:VectorData,ILS<:Union{ILMSystem,Nothing},TV}
     """g: The grid on which the vortex model is defined."""
     g::PhysicalGrid
     """bodies: Bodies in the vortex model."""
@@ -125,7 +125,7 @@ function VortexModel(g::PhysicalGrid, bodies::Vector{PotentialFlowBody}, vortice
     end
 
 
-    VortexModel{Nb,Ne,TV,typeof(system),typeof(_ψ),typeof(_edgedata),typeof(_f),typeof(_bodyvectordata),typeof(ilsys)}(g, bodies, vortices, U∞, system, ilsys, _nodedata, _edgedata, _bodyvectordata, _ψ, _f, _w, _ψb)
+    VortexModel{Nb,Ne,typeof(system),typeof(_ψ),typeof(_edgedata),typeof(_f),typeof(_bodyvectordata),typeof(ilsys),TV}(g, bodies, vortices, U∞, system, ilsys, _nodedata, _edgedata, _bodyvectordata, _ψ, _f, _w, _ψb)
 end
 
 function VortexModel(g::PhysicalGrid; bodies::Vector{PotentialFlowBody}=Vector{PotentialFlowBody}(), vortices::Vector{<:Vortex}=Vector{<:Vortex}(), U∞::Tuple{TV,TV}=(0.0,0.0)) where {TV<:Real}

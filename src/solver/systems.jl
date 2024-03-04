@@ -155,7 +155,7 @@ struct UnsteadyRegularizedIBPoisson{Nb,Ne,TU,TF} <: AbstractPotentialFlowSystem{
     """activef̃lim_vec: Array of f̃ values that are used as the right-hand side for the constraints on f̃ when solving the system. These values are chosen by comparing the unconstrained f̃ from the inner system to the limits provided in `rhs` to `ldiv!` and selecting the limit that is exceeded or setting it to `Inf` if no limit is exceeded."""
     activef̃lim_vec::Vector{f̃Limit}
     """Sout: Schur complement for the outer system."""
-    Sout::Matrix{Float64}
+    Sout::Matrix{Real}
 
     """Buffers"""
     _TU_buf::TU
@@ -191,7 +191,7 @@ function UnsteadyRegularizedIBPoisson(L::CartesianGrids.Laplacian, R::Regulariza
     d_vec = [TU() for i=1:Ne]
     f̃_vec = [TF() for i=1:Ne]
     Γ₀ = sum(f₀)
-    activef̃lim_vec = zeros(Ne)
+    activef̃lim_vec = zeros(Real,Ne)
     Sout = zeros(Nb+Ne,Nb+Ne)
     _r₂_buf = zeros(Real,Nb+Ne)
     _y_buf = zeros(Real,Nb+Ne)

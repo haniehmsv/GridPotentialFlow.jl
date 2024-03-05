@@ -1,8 +1,8 @@
-struct GridPotentialILMProblem{DT,ST} <: AbstractScalarILMProblem{DT,ST}
+struct GridPotentialILMProblem{DT,ST,DTP} <: AbstractScalarILMProblem{DT,ST}
    g :: PhysicalGrid
    bodies :: BodyList
-   GridPotentialILMProblem(g::PT,bodies::BodyList;ddftype=CartesianGrids.Yang3,scaling=IndexScaling) where {PT} = new{ddftype,scaling}(g,bodies)
-   GridPotentialILMProblem(g::PT,body::Body;ddftype=CartesianGrids.Yang3,scaling=IndexScaling) where {PT} = new{ddftype,scaling}(g,BodyList([body]))
+   GridPotentialILMProblem(g::PT,bodies::BodyList;ddftype=CartesianGrids.Yang3,scaling=IndexScaling,dtype=Real) where {PT} = new{ddftype,scaling,dtype}(g,bodies)
+   GridPotentialILMProblem(g::PT,body::Body;ddftype=CartesianGrids.Yang3,scaling=IndexScaling,dtype=Real) where {PT} = new{ddftype,scaling,dtype}(g,BodyList([body]))
 end
 
 GridPotentialILMProblem(g,body::PotentialFlowBody;kwargs...) = GridPotentialILMProblem(g,body.points;kwargs...)
@@ -32,8 +32,8 @@ function ImmersedLayers.prob_cache(prob::GridPotentialILMProblem,base_cache::Bas
     En = InterpolationMatrix(regop,gcurl_cache,sdata_cache)
     Rc = RegularizationMatrix(regop,sdata_cache,gdata_cache)
     Ec = InterpolationMatrix(regop,gdata_cache,sdata_cache)
-    v_cache = Edges(Primal,size(g))
-    cv_cache = ConvectiveDerivativeCache(EdgeGradient(Primal,size(g)))
+    v_cache = Edges(Primal,size(g),dtype=Real)
+    cv_cache = ConvectiveDerivativeCache(EdgeGradient(Primal,size(g),dtype=Real))
 
     GridPotentialExtraCache(A,Rn,En,Rc,Ec,v_cache,cv_cache)
 end

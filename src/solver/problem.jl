@@ -1,4 +1,4 @@
-struct GridPotentialILMProblem{DT,ST,DTP} <: AbstractScalarILMProblem{DT,ST}
+struct GridPotentialILMProblem{DT,ST,DTP} <: AbstractScalarILMProblem{DT,ST,DTP}
    g :: PhysicalGrid
    bodies :: BodyList
    GridPotentialILMProblem(g::PT,bodies::BodyList;ddftype=CartesianGrids.Yang3,scaling=IndexScaling,dtype=Real) where {PT} = new{ddftype,scaling,dtype}(g,bodies)

@@ -363,7 +363,7 @@ function _computeδΓandψ₀!(sol::ConstrainedIBPoissonSolution{TU,TF}, sys::Un
     sol.δΓ_vec .= sys._y_buf[Nb+1:end]
 end
 
-function _findactivef̃limit(e::AbstractVector, f̃, f̃lim::f̃Limits) where {TF}
+function _findactivef̃limit(e::AbstractVector, f̃, f̃lim::f̃Limits)
 
     if e'*f̃ < f̃lim.min
         activef̃lim = f̃lim.min

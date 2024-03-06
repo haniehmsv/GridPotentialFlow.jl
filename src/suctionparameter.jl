@@ -49,7 +49,8 @@ function (/)(p::f̃Limits,c::Number)
 end
 
 function _computef̃limit(SP::SuctionParameter, plate::Polygon, Γ₀)
-    f̃ = -SP*2π*plate.len/Γ₀
+    len = bodylength(plate)
+    f̃ = -SP*2π*len/Γ₀
     return f̃
 end
 

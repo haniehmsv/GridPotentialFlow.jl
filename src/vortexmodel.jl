@@ -76,7 +76,7 @@ function VortexModel(g::PhysicalGrid, bodies::Vector{PotentialFlowBody}, vortice
     # Initialize data structures for internal use
     _nodedata = Nodes(Dual,size(g),dtype=Real)
     _edgedata = Edges(Primal,size(g),dtype=Real)
-    _bodyvectordata = VectorData(sizef,dtype=TV)
+    _bodyvectordata = VectorData(sizef,dtype=Real)
     _ψ = Nodes(Dual,size(g),dtype=Real)
     _f = ScalarData(sizef,dtype=Real)
     _w = Nodes(Dual,size(g),dtype=Real)

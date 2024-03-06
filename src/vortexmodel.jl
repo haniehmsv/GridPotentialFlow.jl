@@ -249,7 +249,7 @@ function vortexvelocities!(vm::VortexModel{Nb,Ne}) where {Nb,Ne}
         solve!(sol, vm)
     end
 
-    Ẋ_vortices = VectorData(length(vm.vortices))
+    Ẋ_vortices = VectorData(length(vm.vortices),dtype=Real)
 
     for k in 1:Ne
         vm.vortices.Γ[end-Ne+k] = sol.δΓ_vec[k]

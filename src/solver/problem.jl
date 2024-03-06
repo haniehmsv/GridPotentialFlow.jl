@@ -1,3 +1,5 @@
+@ilmproblem GridPotentialILM scalar
+
 struct GridPotentialILMProblem{DT,ST,DTP} <: AbstractScalarILMProblem{DT,ST,DTP}
    g :: PhysicalGrid
    bodies :: BodyList

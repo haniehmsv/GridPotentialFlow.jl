@@ -48,8 +48,8 @@ function (/)(p::f̃Limits,c::Number)
     return f̃Limits(p.min/c, p.max/c)
 end
 
-function _computef̃limit(SP::SuctionParameter, plate::PT, Γ₀) where {PT<:RigidBodyTools.Plate}
-    f̃ = -SP*2π*plate.len/Γ₀
+function _computef̃limit(SP::SuctionParameter, plate::Plate, Γ₀)
+    f̃ = -SP*2π*1/Γ₀
     return f̃
 end
 

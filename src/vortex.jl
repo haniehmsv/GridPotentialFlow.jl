@@ -9,13 +9,13 @@ Defines a point vortex with x-position `x`, y-position `y`, and strength `Γ`.
 
 $(TYPEDFIELDS)
 """
-mutable struct Vortex{T}
+mutable struct Vortex
     """x: x-coordinate of the vortex position."""
-    x::T
+    x::Real
     """y: y-coordinate of the vortex position."""
-    y::T
+    y::Real
     """Γ: Strength of the vortex. Positive if counter-clockwise."""
-    Γ::T
+    Γ::Real
 end
 
 function Vortex(x::T,y::T,Γ::T) where {T<:Real}

@@ -38,7 +38,7 @@ function _scaletoindexspace!(rhs::ConstrainedIBPoissonRHS, Δx::Real)
 end
 
 function _scaletoindexspace!(rhs::UnsteadyRegularizedIBPoissonRHS, Δx::Real)
-    rhs.w ./= Δx
+    rhs.w .*= Δx
     rhs.ψb ./= Δx
     rhs.f̃lim_vec ./= Δx  # Use same scaling for σ as for f
     rhs.Γw_vec ./= Δx

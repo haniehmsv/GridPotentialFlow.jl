@@ -201,9 +201,9 @@ function _updatesystemd_vec!(vm::VortexModel{Nb,Ne,UnsteadyRegularizedIBPoisson{
 
     v = view(vm.vortices,idx)
 
-    H = Regularize(FD.value.(getpositions(v)), cellsize(vm.g), I0=origin(vm.g), ddftype=CartesianGrids.M4prime, issymmetric=true)
+    H = Regularize(VectorData(FD.value.(getpositions(v).data)), cellsize(vm.g), I0=origin(vm.g), ddftype=CartesianGrids.M4prime, issymmetric=true)
 
-    Γ = deepcopy(FD.value.(getstrengths(v)))
+    Γ = deepcopy(ScalarData(FD.value.(getstrengths(v).data)))
     for i in 1:Ne
         Γ .= 0
         Γ[i] = 1.0

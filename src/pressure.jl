@@ -8,7 +8,7 @@ function pressurejump!(dp::ScalarData{N},γn::ScalarData{N},γnp1::ScalarData{N}
     gcurl_cache .= cellsize(g)*(Rn*γnp1 - gcurl_cache)/Δt
     inverse_laplacian!(gcurl_cache,sys)
     surface_curl!(sdata_cache,gcurl_cache,sys)
-    dp .= CLinvCT\sdata_cache
+    ldiv!(dp,factorize(CLinvCT),sdata_cache)
     dp .*= -1.0
 
     cross!(sdata_cache,nrm,v̄s)
@@ -42,8 +42,8 @@ end
 
 function surface_velocity!(v̄s::VectorData,v̄::Edges{Primal},sys::ImmersedLayers.ILMSystem)
     @unpack base_cache = sys
-    @unpack E = base_cache
-    v̄s .= E*v̄
+    @unpack Esn = base_cache
+    v̄s .= Esn*v̄
 end
 
 function pressure!(p̄::Nodes{Primal,NX,NY},v̄::Edges{Primal,NX,NY},dp::ScalarData,sys::ImmersedLayers.ILMSystem) where {NX,NY}

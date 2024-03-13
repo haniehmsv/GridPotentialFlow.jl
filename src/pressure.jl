@@ -1,6 +1,6 @@
 export pressurejump!, pressure!, velocity!, surface_velocity!, sided_pressures
 
-function pressurejump!(dp::ScalarData{N},γn::ScalarData{N},γnp1::ScalarData{N},v̄s::VectorData{N},Δt::Real,sys::ImmersedLayers.ILMSystem{<:GridPotentialILMProblem}) where {N}
+function pressurejump!(dp::ScalarData{N},γn::ScalarData{N},γnp1::ScalarData{N},v̄s::VectorData{N},Δt::Real,sys::ImmersedLayers.ILMSystem{static,<:GridPotentialILMProblem}) where {N,static}
     @unpack base_cache, extra_cache = sys
     @unpack g, nrm, gcurl_cache, sdata_cache = base_cache
     @unpack CLinvCT, Rn = extra_cache
@@ -19,7 +19,7 @@ end
 
 """An alternative way to calculate pressure jump across the plate using the idea of Δϕₖ=-Γₖ"""
 
-function pressurejump!(dp::ScalarData{N},fn::ScalarData{N},vm1::VortexModel,fnp1::ScalarData{N},v̄s::VectorData{N},Δt::Real,Δs, sys::ImmersedLayers.ILMSystem{<:GridPotentialILMProblem}) where {N}
+function pressurejump!(dp::ScalarData{N},fn::ScalarData{N},vm1::VortexModel,fnp1::ScalarData{N},v̄s::VectorData{N},Δt::Real,Δs, sys::ImmersedLayers.ILMSystem{static,<:GridPotentialILMProblem}) where {N,static}
     @unpack base_cache, extra_cache = sys
     @unpack g, nrm, gcurl_cache, sdata_cache = base_cache
     @unpack CLinvCT, Rn = extra_cache

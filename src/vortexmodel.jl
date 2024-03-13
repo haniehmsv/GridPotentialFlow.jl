@@ -87,7 +87,7 @@ function VortexModel(g::PhysicalGrid, bodies::Vector{PotentialFlowBody}, vortice
         system = L
         ilsys = nothing
     else
-        prob = GridPotentialILMProblem(g,bodies,scaling=GridScaling)
+        prob = GridPotentialILMProblem(g,bodies,scaling=GridScaling,ddftype=CartesianGrids.Yang3)
         ilsys = ImmersedLayers.__init(prob)
             
         regop = Regularize(VectorData(collect(bodies)), cellsize(g), I0=origin(g), ddftype = CartesianGrids.Yang3, issymmetric=true)

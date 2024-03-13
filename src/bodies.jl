@@ -1,7 +1,7 @@
 import Base: show, length, collect
 import RigidBodyTools: RigidTransform
 
-export PotentialFlowBody, subtractcirculation!, getU, getΩ, getΓ, setU, setΩ, setΓ
+export PotentialFlowBody, subtractcirculation!, getU, getΩ, getΓ, setU, setΩ, setΓ, bodylength
 
 """
 $TYPEDEF
@@ -181,6 +181,14 @@ end
 function (T::RigidBodyTools.RigidTransform)(b::PotentialFlowBody)
     T(b.points)
     return b
+end
+
+function bodylength(b::Body)
+    return abs(b.x̃end[end]-b.x̃end[1])
+end
+
+function bodylength(b::PotentialFlowBody)
+    return abs(b.points.x̃end[end]-b.points.x̃end[1])
 end
 
 @inline RigidBodyTools.dlength(b::PotentialFlowBody) = dlength(b.points)

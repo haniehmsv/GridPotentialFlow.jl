@@ -1,9 +1,11 @@
-struct GridPotentialILMProblem{DT,ST} <: AbstractScalarILMProblem{DT,ST}
-   g :: PhysicalGrid
-   bodies :: BodyList
-   GridPotentialILMProblem(g::PT,bodies::BodyList;ddftype=CartesianGrids.Yang3,scaling=IndexScaling) where {PT} = new{ddftype,scaling}(g,bodies)
-   GridPotentialILMProblem(g::PT,body::Body;ddftype=CartesianGrids.Yang3,scaling=IndexScaling) where {PT} = new{ddftype,scaling}(g,BodyList([body]))
-end
+@ilmproblem GridPotentialILM scalar
+
+# struct GridPotentialILMProblem{DT,ST} <: AbstractScalarILMProblem{DT,ST}
+#    g :: PhysicalGrid
+#    bodies :: BodyList
+#    GridPotentialILMProblem(g::PT,bodies::BodyList;ddftype=CartesianGrids.Yang3,scaling=IndexScaling) where {PT} = new{ddftype,scaling}(g,bodies)
+#    GridPotentialILMProblem(g::PT,body::Body;ddftype=CartesianGrids.Yang3,scaling=IndexScaling) where {PT} = new{ddftype,scaling}(g,BodyList([body]))
+# end
 
 GridPotentialILMProblem(g,body::PotentialFlowBody;kwargs...) = GridPotentialILMProblem(g,body.points;kwargs...)
 function GridPotentialILMProblem(g,bodies::Vector{<:PotentialFlowBody};kwargs...)

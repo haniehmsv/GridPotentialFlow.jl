@@ -43,7 +43,7 @@ end
 
 function surface_velocity!(v̄s::VectorData,v̄::Edges{Primal},sys::ImmersedLayers.ILMSystem)
     @unpack base_cache = sys
-    @unpack Esn = base_cache
+    @unpack Esn, g = base_cache
     v̄s .= Esn*v̄
     v̄s .*= cellsize(g)
 end

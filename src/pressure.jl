@@ -43,9 +43,8 @@ end
 
 function surface_velocity!(v̄s::VectorData,v̄::Edges{Primal},sys::ImmersedLayers.ILMSystem)
     @unpack base_cache = sys
-    @unpack Esn, g = base_cache
+    @unpack Esn = base_cache
     v̄s .= Esn*v̄
-    v̄s .*= cellsize(g)
 end
 
 function pressure!(p̄::Nodes{Primal,NX,NY},v̄::Edges{Primal,NX,NY},dp::ScalarData,sys::ImmersedLayers.ILMSystem) where {NX,NY}

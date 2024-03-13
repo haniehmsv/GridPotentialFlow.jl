@@ -18,7 +18,7 @@ mutable struct Vortex{DT}
     Γ::Real
 end
 
-function Vortex(x::T,y::T,Γ::T;DT=Float64) where {T<:Real}
+function Vortex(x::T,y::T,Γ::TΓ;DT=Float64) where {T<:Real,TΓ<:Real}
     return Vortex{DT}(x,y,Γ)
 end
 

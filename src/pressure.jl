@@ -9,7 +9,7 @@ function pressurejump!(dp::ScalarData{N},γn::ScalarData{N},γnp1::ScalarData{N}
     inverse_laplacian!(gcurl_cache,sys)
     surface_curl!(sdata_cache,gcurl_cache,sys)
     dp .= CLinvCT\sdata_cache
-    dp .*= -1.0
+    # dp .*= -1.0
 
     cross!(sdata_cache,nrm,v̄s)
     # dp .-= sdata_cache∘γn

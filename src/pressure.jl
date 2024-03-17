@@ -13,7 +13,6 @@ function pressurejump!(dp::ScalarData{N},γn::ScalarData{N},γnp1::ScalarData{N}
 
     cross!(sdata_cache,nrm,v̄s)
     dp .-= sdata_cache∘γn
-    return dp
 
 end
 

@@ -48,13 +48,13 @@ end
 
 function pressure!(p̄::Nodes{Primal,NX,NY},v̄::Edges{Primal,NX,NY},dp::ScalarData,sys::ImmersedLayers.ILMSystem) where {NX,NY}
     @unpack base_cache, extra_cache = sys
-    @unpack g, L, R, nrm, gsnorm_cache, snorm_cache = base_cache
+    @unpack g, L, Rsn, nrm, gsnorm_cache, snorm_cache = base_cache
     @unpack v_cache, cv_cache = extra_cache
 
     fill!(v_cache,0.0)
     ImmersedLayers.convective_derivative!(v_cache,v̄,base_cache,cv_cache)
     product!(snorm_cache,nrm,dp)
-    gsnorm_cache .= R*snorm_cache
+    gsnorm_cache .= Rsn*snorm_cache
     v_cache .-= gsnorm_cache
 
     fill!(p̄,0.0)

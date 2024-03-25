@@ -5,7 +5,7 @@ function pressurejump!(dp::ScalarData{N},γn::ScalarData{N},γnp1::ScalarData{N}
     @unpack g, nrm, gcurl_cache, sdata_cache = base_cache
     @unpack CLinvCT, Rn = extra_cache
     gcurl_cache .= Rn*γn
-    gcurl_cache .= (Rn*γnp1 - gcurl_cache)/Δt
+    gcurl_cache .= cellsize(g)*(Rn*γnp1 - gcurl_cache)/Δt
     inverse_laplacian!(gcurl_cache,sys)
     surface_curl!(sdata_cache,gcurl_cache,sys)
     dp .= CLinvCT\sdata_cache

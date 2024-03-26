@@ -25,8 +25,8 @@ function pressurejump!(dp::ScalarData{N},fn::ScalarData{N},vm1::VortexModel,fnp1
     @unpack CLinvCT, Rn = extra_cache
 
     for i in 1:length(dp)
-        dp[i] = sum(view(fnp1,1:i)) + vm1.vortices.Γ[end-1]
-        dp[i] -= sum(view(fn,1:i))
+        dp[i] = sum(view(fnp1,1:i).*Δs[1:i]) + vm1.vortices.Γ[end-1]
+        dp[i] -= sum(view(fn,1:i).*Δs[1:i])
     end
     dp .*= -cellsize(g)/Δt
     cross!(sdata_cache,nrm,v̄s)

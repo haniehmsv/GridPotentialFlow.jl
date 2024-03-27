@@ -29,9 +29,8 @@ function pressurejump!(dp::ScalarData{N},γn::ScalarData{N},vm1::VortexModel,γn
         dp[i] -= sum(view(γn,1:i).*Δs[1:i])
     end
     dp ./= Δt
-    # cross!(sdata_cache,nrm,v̄s)
-    # γn = fn./Δs
-    # dp .-= sdata_cache∘γn
+    cross!(sdata_cache,nrm,v̄s)
+    dp .+= sdata_cache∘γn
 end
 
 function velocity!(v̄::Edges{Primal,NX,NY},ψ::Nodes{Dual,NX,NY},sys::ImmersedLayers.ILMSystem) where {NX,NY}

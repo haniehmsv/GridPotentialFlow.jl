@@ -239,7 +239,7 @@ $(SIGNATURES)
 
 Returns the flow velocity as `VectorData` at the locations of the vortices stored in the vortex model `vm`, accounting for bodies in `vm`. If the `vm` has `Ne` regularized edges and vortices, the strengths of the last `Ne` vortices will be computed and set in `vm` and the circulation of the shedded vortices will be subtracted from the bound circulation of each body.
 """
-function vortexvelocities!(vm::VortexModel{Nb,Ne,DT}) where {Nb,Ne}
+function vortexvelocities!(vm::VortexModel{Nb,Ne,DT}) where {Nb,Ne,DT}
 
     if Nb == 0
         sol = PoissonSolution(vm._ψ)

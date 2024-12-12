@@ -34,7 +34,7 @@ mutable struct VortexModel{Nb,Ne,DT,TS<:Union{AbstractPotentialFlowSystem,Laplac
     """bodies: Bodies in the vortex model."""
     bodies::Vector{PotentialFlowBody}
     """vortices: Point vortices in the vortex model."""
-    vortices::StructVector{<:Vortex{DT}}
+    vortices::StructVector{<:Vortex}
     """U∞: Uniform flow in the vortex model."""
     U∞::Tuple{TV,TV}
     """system: Potential flow system that has to be solved with an `AbstractPotentialFlowRHS` and an `AbstractPotentialFlowSolution` to compute the potential flow that governs the vortex model.
@@ -58,8 +58,8 @@ $(TYPEDSIGNATURES)
 
 Constructs a vortex model using the given function.
 """
-function VortexModel(g::PhysicalGrid, bodies::Vector{PotentialFlowBody}, vortices::StructVector{<:Vortex{DT}}, U∞::Tuple{TV,TV}) where {TV<:Real, DT}
-
+function VortexModel(g::PhysicalGrid, bodies::Vector{PotentialFlowBody}, vortices::StructVector{<:Vortex}, U∞::Tuple{TV,TV}) where {TV<:Real}
+    DT = typeof(vortices[1]).parameters[1]
     vortices = deepcopy(vortices)
 
     e_idx = getregularizededges(bodies)

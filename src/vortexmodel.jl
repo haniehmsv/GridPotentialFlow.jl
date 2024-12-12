@@ -58,7 +58,7 @@ $(TYPEDSIGNATURES)
 
 Constructs a vortex model using the given function.
 """
-function VortexModel(g::PhysicalGrid, bodies::Vector{PotentialFlowBody}, vortices::StructVector{Vortex{DT}}, U∞::Tuple{TV,TV}) where {TV<:Real, DT<:Real}
+function VortexModel(g::PhysicalGrid, bodies::Vector{PotentialFlowBody}, vortices::StructVector{<:Vortex{DT}}, U∞::Tuple{TV,TV}) where {TV<:Real, DT<:Real}
 
     vortices = deepcopy(vortices)
 

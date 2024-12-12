@@ -28,13 +28,13 @@ $(TYPEDFIELDS)
 # Examples
 (under construction)
 """
-mutable struct VortexModel{Nb,Ne,TS<:Union{AbstractPotentialFlowSystem,Laplacian},TU<:Nodes,TE<:Edges,TF<:ScalarData,TX<:VectorData,ILS<:Union{ILMSystem,Nothing},TV}
+mutable struct VortexModel{Nb,Ne,DT,TS<:Union{AbstractPotentialFlowSystem,Laplacian},TU<:Nodes,TE<:Edges,TF<:ScalarData,TX<:VectorData,ILS<:Union{ILMSystem,Nothing},TV}
     """g: The grid on which the vortex model is defined."""
     g::PhysicalGrid
     """bodies: Bodies in the vortex model."""
     bodies::Vector{PotentialFlowBody}
     """vortices: Point vortices in the vortex model."""
-    vortices::StructVector{<:Vortex}
+    vortices::StructVector{Vortex{DT}}
     """U∞: Uniform flow in the vortex model."""
     U∞::Tuple{TV,TV}
     """system: Potential flow system that has to be solved with an `AbstractPotentialFlowRHS` and an `AbstractPotentialFlowSolution` to compute the potential flow that governs the vortex model.
@@ -58,7 +58,7 @@ $(TYPEDSIGNATURES)
 
 Constructs a vortex model using the given function.
 """
-function VortexModel(g::PhysicalGrid, bodies::Vector{PotentialFlowBody}, vortices::StructVector{<:Vortex}, U∞::Tuple{TV,TV}) where {TV<:Real}
+function VortexModel(g::PhysicalGrid, bodies::Vector{PotentialFlowBody}, vortices::StructVector{Vortex{DT}}, U∞::Tuple{TV,TV}) where {TV<:Real, DT<:Real}
 
     vortices = deepcopy(vortices)
 
@@ -74,27 +74,27 @@ function VortexModel(g::PhysicalGrid, bodies::Vector{PotentialFlowBody}, vortice
     end
 
     # Initialize data structures for internal use
-    _nodedata = Nodes(Dual,size(g),dtype=Real)
-    _edgedata = Edges(Primal,size(g),dtype=Real)
-    _bodyvectordata = VectorData(sizef,dtype=Real)
-    _ψ = Nodes(Dual,size(g),dtype=Real)
-    _f = ScalarData(sizef,dtype=Real)
-    _w = Nodes(Dual,size(g),dtype=Real)
-    _ψb = ScalarData(sizef,dtype=Real)
+    _nodedata = Nodes(Dual,size(g),dtype=DT)
+    _edgedata = Edges(Primal,size(g),dtype=DT)
+    _bodyvectordata = VectorData(sizef,dtype=DT)
+    _ψ = Nodes(Dual,size(g),dtype=DT)
+    _f = ScalarData(sizef,dtype=DT)
+    _w = Nodes(Dual,size(g),dtype=DT)
+    _ψb = ScalarData(sizef,dtype=DT)
 
     L = plan_laplacian(size(_nodedata),with_inverse=true)
     if Nb == 0
         system = L
         ilsys = nothing
     else
-        prob = GridPotentialILMProblem(g,bodies,scaling=GridScaling,ddftype=CartesianGrids.Yang3,dtype=Real)
+        prob = GridPotentialILMProblem(g,bodies,scaling=GridScaling,ddftype=CartesianGrids.Yang3,dtype=DT)
         ilsys = ImmersedLayers.__init(prob)
             
         regop = Regularize(VectorData(collect(bodies)), cellsize(g), I0=origin(g), ddftype = CartesianGrids.Yang3, issymmetric=true)
         Rmat,_ = RegularizationMatrix(regop, _f, _nodedata)
         Emat = InterpolationMatrix(regop, _nodedata, _f)
 
-        one_vec = [ScalarData(sizef,dtype=Real) for i in 1:Nb]
+        one_vec = [ScalarData(sizef,dtype=DT) for i in 1:Nb]
         for i in 1:Nb
             one_vec[i][getrange(bodies,i)] .= 1.0
         end
@@ -102,7 +102,7 @@ function VortexModel(g::PhysicalGrid, bodies::Vector{PotentialFlowBody}, vortice
         if Ne == 0 # System without regularized edges. Enforce circulation constraints.
             system = ConstrainedIBPoisson(L, Rmat, Emat, one_vec, one_vec)
         else # System with regularized edges. Enforce edge constraints.
-            e_vec = [ScalarData(sizef,dtype=Real) for i in 1:Ne]
+            e_vec = [ScalarData(sizef,dtype=DT) for i in 1:Ne]
             k = 0
             for i in 1:Nb
                 for id in getregularizededges(bodies,i)
@@ -125,10 +125,10 @@ function VortexModel(g::PhysicalGrid, bodies::Vector{PotentialFlowBody}, vortice
     end
 
 
-    VortexModel{Nb,Ne,typeof(system),typeof(_ψ),typeof(_edgedata),typeof(_f),typeof(_bodyvectordata),typeof(ilsys),TV}(g, bodies, vortices, U∞, system, ilsys, _nodedata, _edgedata, _bodyvectordata, _ψ, _f, _w, _ψb)
+    VortexModel{Nb,Ne,DT,typeof(system),typeof(_ψ),typeof(_edgedata),typeof(_f),typeof(_bodyvectordata),typeof(ilsys),TV}(g, bodies, vortices, U∞, system, ilsys, _nodedata, _edgedata, _bodyvectordata, _ψ, _f, _w, _ψb)
 end
 
-function VortexModel(g::PhysicalGrid; bodies::Vector{PotentialFlowBody}=Vector{PotentialFlowBody}(), vortices::Vector{<:Vortex}=Vector{<:Vortex}(), U∞::Tuple{TV,TV}=(0.0,0.0)) where {TV<:Real}
+function VortexModel(g::PhysicalGrid; bodies::Vector{PotentialFlowBody}=Vector{PotentialFlowBody}(), vortices::Vector{Vortex}=Vector{<:Vortex}(), U∞::Tuple{TV,TV}=(0.0,0.0)) where {TV<:Real}
     return VortexModel(g, bodies, StructVector(vortices), U∞)
 end
 
@@ -239,7 +239,7 @@ $(SIGNATURES)
 
 Returns the flow velocity as `VectorData` at the locations of the vortices stored in the vortex model `vm`, accounting for bodies in `vm`. If the `vm` has `Ne` regularized edges and vortices, the strengths of the last `Ne` vortices will be computed and set in `vm` and the circulation of the shedded vortices will be subtracted from the bound circulation of each body.
 """
-function vortexvelocities!(vm::VortexModel{Nb,Ne}) where {Nb,Ne}
+function vortexvelocities!(vm::VortexModel{Nb,Ne,DT}) where {Nb,Ne}
 
     if Nb == 0
         sol = PoissonSolution(vm._ψ)
@@ -249,7 +249,7 @@ function vortexvelocities!(vm::VortexModel{Nb,Ne}) where {Nb,Ne}
         solve!(sol, vm)
     end
 
-    Ẋ_vortices = VectorData(length(vm.vortices),dtype=Real)
+    Ẋ_vortices = VectorData(length(vm.vortices),dtype=DT)
 
     for k in 1:Ne
         vm.vortices.Γ[end-Ne+k] = sol.δΓ_vec[k]
